@@ -1,65 +1,36 @@
 import userData from '../fixtures/userData.json'
+import LoginPage from '../pages/loginPage'
+import DashboardPage from '../pages/dashboardPage'
+import MenuPage from '../pages/menuPage'
+import MyInfoPage from '../pages/myInfoPage'
 
+const loginPage = new LoginPage()
+const dashboardPage = new DashboardPage()
+const menuPage = new MenuPage()
+const myInfoPage = new MyInfoPage()
+ 
 describe('Orange HRM tests', () => {
+    
+  it('User Info Update - Success', () => {
+    loginPage.accessLoginPage()
+    loginPage.loginWithUser(userData.userSuccess.username, userData.userSuccess.password)
 
-  const selectorsList = {
-    usernameField: '[name="username"]',
-    passwordField: '[name="password"]',
-    loginButton: '.oxd-button',
-    selectionTitleTopBar: '.oxd-topbar-header-breadcrumb > .oxd-text',
-    dashboardGrid: '.orangehrm-dashboard-grid',
-    wrongCredentialAlert: '.oxd-alert-content > .oxd-text',
-    myInfoButton: '[href="/web/index.php/pim/viewMyDetails"]',
-    firstNameField: '[name="firstName"]',
-    middleNameField: '[name="middleName"]',
-    lastNameField: '[name="lastName"]',
-    genericField: '.oxd-input--active',
-    dateCloseButton: '.--close',
-    submitButton: '[type="submit"]',
-    genericSelect: '.oxd-select-text--active',
-    countryListOption: '.oxd-select-dropdown > :nth-child(27)',
-    maritalStatusListOption: '.oxd-select-dropdown > :nth-child(3)',
-    labelGender: ':nth-child(2) > :nth-child(2) > .oxd-radio-wrapper > label',
-    bloodTypeListOption: '.oxd-select-dropdown > :nth-child(5)'
-  }
+    dashboardPage.checkDashboardPage()
+    
+    menuPage.accessMyInfo()
+
+    myInfoPage.fillPersonalDetails('Nome TESTE', 'Meio TESTE', 'Sobrenome TESTE')
+    myInfoPage.fillEmployeeDetails('Id TESTE', 'Other ID', 'Driver TESTE','2030-12-31')
+    myInfoPage.fillStatus()
+    myInfoPage.firstSaveForm()
+    myInfoPage.fillCustomField('Text TESTE')
+    myInfoPage.secondSaveForm()
 
 
-  it.only('User Info Update - Success', () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField).type(userData.userSuccess.username)
-    cy.get(selectorsList.passwordField).type(userData.userSuccess.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-    cy.get(selectorsList.dashboardGrid)
-    cy.get(selectorsList.myInfoButton).click()
-    cy.get(selectorsList.firstNameField).clear().type('Nome TESTE')
-    cy.get(selectorsList.middleNameField).clear().type('Sobrenome meio TESTE')
-    cy.get(selectorsList.lastNameField).clear().type('Sobrenome TESTE')
-    cy.get(selectorsList.genericField).eq(3).clear().type('ID TESTE')
-    cy.get(selectorsList.genericField).eq(4).clear().type('otherID TESTE')
-    cy.get(selectorsList.genericField).eq(5).clear().type('Driver TESTE')
-    cy.get(selectorsList.genericField).eq(6).clear().type('2030-28-11')
-    cy.get(selectorsList.dateCloseButton).click()
-    cy.get(selectorsList.genericSelect).eq(0).click()
-    cy.get(selectorsList.countryListOption).click()
-    cy.get(selectorsList.genericSelect).eq(1).click()
-    cy.get(selectorsList.maritalStatusListOption).click()
-    cy.get(selectorsList.genericField).eq(8).click().clear().type('1988-05-11')
-    cy.get(selectorsList.dateCloseButton).click()
-    cy.get(selectorsList.labelGender).click()
-    cy.get(selectorsList.submitButton).eq(0).click()
-    cy.get('body').should('contain', 'Successfully Updated')
-    cy.get(selectorsList.genericSelect).eq(2).click()
-    cy.get(selectorsList.bloodTypeListOption).click()
-    cy.get(selectorsList.genericField).eq(9).click().clear().type('Text TESTE')
-    cy.get(selectorsList.submitButton).eq(1).click()
-    cy.get('body').should('contain', 'Successfully Updated')
   })
     it('Login - Fail', () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField).type(userData.userFail.username)
-    cy.get(selectorsList.passwordField).type(userData.userFail.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.get(selectorsList.wrongCredentialAlert)
+      loginPage.accessLoginPage()  
+      loginPage.loginWithUser(userData.userFail.username, userData.userFail.password)
+      loginPage.checkAccessInvalid()
   })
 })
