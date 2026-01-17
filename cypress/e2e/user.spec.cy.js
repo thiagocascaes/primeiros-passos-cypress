@@ -16,6 +16,11 @@ describe('Orange HRM tests', () => {
     genericField: '.oxd-input--active',
     dateCloseButton: '.--close',
     submitButton: '[type="submit"]',
+    genericSelect: '.oxd-select-text--active',
+    countryListOption: '.oxd-select-dropdown > :nth-child(27)',
+    maritalStatusListOption: '.oxd-select-dropdown > :nth-child(3)',
+    labelGender: ':nth-child(2) > :nth-child(2) > .oxd-radio-wrapper > label',
+    bloodTypeListOption: '.oxd-select-dropdown > :nth-child(5)'
   }
 
 
@@ -34,7 +39,20 @@ describe('Orange HRM tests', () => {
     cy.get(selectorsList.genericField).eq(4).clear().type('otherID TESTE')
     cy.get(selectorsList.genericField).eq(5).clear().type('Driver TESTE')
     cy.get(selectorsList.genericField).eq(6).clear().type('2030-28-11')
+    cy.get(selectorsList.dateCloseButton).click()
+    cy.get(selectorsList.genericSelect).eq(0).click()
+    cy.get(selectorsList.countryListOption).click()
+    cy.get(selectorsList.genericSelect).eq(1).click()
+    cy.get(selectorsList.maritalStatusListOption).click()
+    cy.get(selectorsList.genericField).eq(8).click().clear().type('1988-05-11')
+    cy.get(selectorsList.dateCloseButton).click()
+    cy.get(selectorsList.labelGender).click()
     cy.get(selectorsList.submitButton).eq(0).click()
+    cy.get('body').should('contain', 'Successfully Updated')
+    cy.get(selectorsList.genericSelect).eq(2).click()
+    cy.get(selectorsList.bloodTypeListOption).click()
+    cy.get(selectorsList.genericField).eq(9).click().clear().type('Text TESTE')
+    cy.get(selectorsList.submitButton).eq(1).click()
     cy.get('body').should('contain', 'Successfully Updated')
   })
     it('Login - Fail', () => {
